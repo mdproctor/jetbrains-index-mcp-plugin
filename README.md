@@ -242,7 +242,7 @@ Each JetBrains IDE has a unique default port and server name to allow running mu
 
 ## Available Tools
 
-The plugin provides **40 MCP tools** organized by availability. Tools marked *(disabled by default)* can be enabled in <kbd>Settings</kbd> > <kbd>Tools</kbd> > <kbd>Index MCP Server</kbd>.
+The plugin provides **43 MCP tools** organized by availability. Tools marked *(disabled by default)* can be enabled in <kbd>Settings</kbd> > <kbd>Tools</kbd> > <kbd>Index MCP Server</kbd>.
 
 ### Universal Tools
 
@@ -274,6 +274,8 @@ These tools work in all supported JetBrains IDEs.
 | `ide_move_file` | Move a file to a new directory, applying language-aware reference/package updates when the IDE provides a semantic move backend |
 | `ide_reformat_code` | Reformat code using project code style with import optimization *(disabled by default)* |
 | `ide_optimize_imports` | Optimize imports without reformatting code *(disabled by default)* |
+| `ide_structural_search_replace` | Pattern-based code search and transformation using IntelliJ's Structural Search and Replace engine (Java, Kotlin) *(disabled by default)* |
+| `ide_change_signature` | Change method signature with automatic caller updates (Java only) *(disabled by default)* |
 
 ### Extended Tools (Language-Aware)
 
