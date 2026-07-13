@@ -4,6 +4,7 @@
 
 ## [Unreleased]
 ### Added
+- **`ide_create_module`** — add a directory as an IntelliJ module with a content root, enabling code intelligence for non-Maven projects (TypeScript, plain directories, etc.). Supports optional directory exclusions (e.g., `node_modules`, `dist`). For Maven projects, use `ide_import_modules` instead. *(disabled by default)*
 - **`ide_open_workspace`** — scan a root directory for Maven projects and open them all in one IntelliJ window with full cross-project code intelligence. Creates a temporary Maven aggregator POM with relative module paths. Also accepts an explicit `modules` array of absolute paths for ad-hoc workspaces — same module combination (in any order) reuses the cached workspace via SHA-based naming. Only available when the Maven plugin is installed. *(disabled by default)*
 - **`ide_edit_member`** — replace an entire class member declaration (signature + body) by structural name, not text match. Targets by file, class, and member name with optional overload disambiguation. Auto-reformats after editing. Supports Java and Kotlin; experimental JavaScript/TypeScript support when the JavaScript plugin is installed. *(disabled by default)*
 - **`ide_insert_member`** — insert a new member (method, field, inner class) at a structural position relative to an anchor member or at the start/end of a class body. Auto-reformats after insertion. Supports Java and Kotlin; experimental JavaScript/TypeScript support when the JavaScript plugin is installed. *(disabled by default)*
