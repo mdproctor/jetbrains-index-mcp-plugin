@@ -50,13 +50,16 @@ These tools activate based on installed language plugins:
 - **Call Hierarchy** - Trace method/function call relationships
 - **Find Implementations** - Discover interface/abstract implementations
 - **Find Super Methods** - Navigate method override hierarchies
-- **File Structure** - View hierarchical file structure like IDE's Structure view, including PHP Structure View trees and Markdown heading outlines (disabled by default)
+- **File Structure** - View hierarchical file structure like IDE's Structure view, including PHP Structure View trees and Markdown heading outlines; shows start and end line for each element (disabled by default)
 
 **Refactoring Tools**
 - **Rename Refactoring** - Safe renaming with automatic related element renaming (getters/setters, overriding methods) - works across ALL languages, fully headless
 - **Move File** - Move files with IDE-aware reference and package updates when supported
 - **Reformat Code** - Reformat using project code style with import optimization (disabled by default)
 - **Optimize Imports** - Remove unused imports and organize imports without reformatting (disabled by default)
+- **Edit Member** - Replace an entire member declaration (signature + body) with new content (Java/Kotlin, disabled by default)
+- **Insert Member** - Insert a new member at a structural position (Java/Kotlin, disabled by default)
+- **Replace Member** - Replace method body or field initializer only, preserving the signature (Java/Kotlin, disabled by default)
 - **Safe Delete** - Remove code with usage checking (Java/Kotlin only)
 - **Java to Kotlin Conversion** - Convert Java to Kotlin using Intellij's built-in converter (Java only)
 
@@ -242,7 +245,7 @@ Each JetBrains IDE has a unique default port and server name to allow running mu
 
 ## Available Tools
 
-The plugin provides **40 MCP tools** organized by availability. Tools marked *(disabled by default)* can be enabled in <kbd>Settings</kbd> > <kbd>Tools</kbd> > <kbd>Index MCP Server</kbd>.
+The plugin provides **43 MCP tools** organized by availability. Tools marked *(disabled by default)* can be enabled in <kbd>Settings</kbd> > <kbd>Tools</kbd> > <kbd>Index MCP Server</kbd>.
 
 ### Universal Tools
 
@@ -274,6 +277,9 @@ These tools work in all supported JetBrains IDEs.
 | `ide_move_file` | Move a file to a new directory, applying language-aware reference/package updates when the IDE provides a semantic move backend |
 | `ide_reformat_code` | Reformat code using project code style with import optimization *(disabled by default)* |
 | `ide_optimize_imports` | Optimize imports without reformatting code *(disabled by default)* |
+| `ide_edit_member` | Replace an entire member declaration (signature + body) with new content (Java, Kotlin) *(disabled by default)* |
+| `ide_insert_member` | Insert a new member at a structural position in a class or file (Java, Kotlin) *(disabled by default)* |
+| `ide_replace_member` | Replace a method body or field initializer only, preserving the signature (Java, Kotlin) *(disabled by default)* |
 
 ### Extended Tools (Language-Aware)
 
@@ -285,7 +291,7 @@ These tools activate based on available language plugins:
 | `ide_call_hierarchy` | Analyze method call relationships (callers or callees) | Java, Kotlin, Python, JS/TS, Go, PHP, Rust |
 | `ide_find_implementations` | Find all implementations of an interface or abstract method | Java, Kotlin, Python, JS/TS, PHP, Rust |
 | `ide_find_super_methods` | Find the full inheritance hierarchy of methods that a method overrides/implements | Java, Kotlin, Python, JS/TS, PHP |
-| `ide_file_structure` | Get hierarchical file structure (similar to IDE's Structure view) *(disabled by default)* | Java, Kotlin, Python, JS/TS, PHP, Markdown |
+| `ide_file_structure` | Get hierarchical file structure (similar to IDE's Structure view) with start and end line numbers for each element *(disabled by default)* | Java, Kotlin, Python, JS/TS, PHP, Markdown |
 
 PHP file structure support requires the PHP plugin and is available in PhpStorm or IntelliJ IDEA Ultimate with the PHP plugin enabled.
 

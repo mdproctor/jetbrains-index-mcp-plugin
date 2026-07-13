@@ -491,6 +491,10 @@ class ToolExecutionIntegrationTest : BasePlatformTestCase() {
             ToolNames.REFACTOR_SAFE_DELETE,
             ToolNames.REFORMAT_CODE,
             ToolNames.OPTIMIZE_IMPORTS,
+            // Code editing tools
+            ToolNames.EDIT_MEMBER,
+            ToolNames.INSERT_MEMBER,
+            ToolNames.REPLACE_MEMBER,
             // Editor tools
             ToolNames.GET_ACTIVE_FILE,
             ToolNames.OPEN_FILE,

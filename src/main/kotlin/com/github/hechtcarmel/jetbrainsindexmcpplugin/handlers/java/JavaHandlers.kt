@@ -137,6 +137,14 @@ abstract class BaseJavaHandler<T> : LanguageHandler<T> {
         return PsiSourcePosition.column(project, element)
     }
 
+    protected fun getEndLineNumber(project: Project, element: PsiElement): Int? {
+        val file = element.containingFile?.virtualFile ?: return null
+        val document = com.intellij.openapi.fileEditor.FileDocumentManager.getInstance().getDocument(file) ?: return null
+        val endOffset = element.textRange?.endOffset ?: return null
+        if (endOffset <= 0 || endOffset > document.textLength) return null
+        return document.getLineNumber(endOffset - 1) + 1
+    }
+
     protected fun getClassKind(psiClass: PsiClass): String {
         return when {
             psiClass.isInterface -> "INTERFACE"
@@ -1057,6 +1065,7 @@ class JavaStructureHandler : BaseJavaHandler<List<StructureNode>>(), StructureHa
 
     private fun extractClassStructure(psiClass: PsiClass, project: Project): StructureNode? {
         val line = getLineNumber(project, psiClass) ?: return null
+        val endLine = getEndLineNumber(project, psiClass)
         val children = mutableListOf<StructureNode>()
 
         // Fields
@@ -1094,29 +1103,34 @@ class JavaStructureHandler : BaseJavaHandler<List<StructureNode>>(), StructureHa
             modifiers = extractModifiers(psiClass.modifierList),
             signature = buildClassSignature(psiClass),
             line = line,
+            endLine = endLine,
             children = children.sortedBy { it.line }
         )
     }
 
     private fun extractFieldStructure(field: PsiField, project: Project): StructureNode? {
         val line = getLineNumber(project, field) ?: return null
+        val endLine = getEndLineNumber(project, field)
         return StructureNode(
             name = field.name,
             kind = StructureKind.FIELD,
             modifiers = extractModifiers(field.modifierList),
             signature = field.type.presentableText,
-            line = line
+            line = line,
+            endLine = endLine
         )
     }
 
     private fun extractMethodStructure(method: PsiMethod, project: Project): StructureNode? {
         val line = getLineNumber(project, method) ?: return null
+        val endLine = getEndLineNumber(project, method)
         return StructureNode(
             name = method.name,
             kind = if (method.isConstructor) StructureKind.CONSTRUCTOR else StructureKind.METHOD,
             modifiers = extractModifiers(method.modifierList),
             signature = buildMethodSignature(method),
-            line = line
+            line = line,
+            endLine = endLine
         )
     }
 
@@ -1347,6 +1361,7 @@ class KotlinStructureHandler : BaseJavaHandler<List<StructureNode>>(), Structure
                 name = "$name { ... }",
                 kind = StructureKind.FUNCTION,
                 line = line,
+                endLine = getEndLineNumber(project, callExpr),
                 signature = name,
                 modifiers = emptyList(),
                 children = emptyList()
@@ -1404,6 +1419,7 @@ class KotlinStructureHandler : BaseJavaHandler<List<StructureNode>>(), Structure
             modifiers = getKotlinModifiers(ktClass),
             signature = buildKotlinClassSignature(ktClass),
             line = getLineNumber(project, ktClass) ?: 0,
+            endLine = getEndLineNumber(project, ktClass),
             children = children.sortedBy { it.line }
         )
     }
@@ -1414,7 +1430,8 @@ class KotlinStructureHandler : BaseJavaHandler<List<StructureNode>>(), Structure
             kind = StructureKind.FUNCTION,
             modifiers = getKotlinModifiers(function),
             signature = buildKotlinFunctionSignature(function),
-            line = getLineNumber(project, function) ?: 0
+            line = getLineNumber(project, function) ?: 0,
+            endLine = getEndLineNumber(project, function)
         )
     }
 
@@ -1424,7 +1441,8 @@ class KotlinStructureHandler : BaseJavaHandler<List<StructureNode>>(), Structure
             kind = StructureKind.PROPERTY,
             modifiers = getKotlinModifiers(property),
             signature = buildKotlinPropertySignature(property),
-            line = getLineNumber(project, property) ?: 0
+            line = getLineNumber(project, property) ?: 0,
+            endLine = getEndLineNumber(project, property)
         )
     }
 
@@ -1434,7 +1452,8 @@ class KotlinStructureHandler : BaseJavaHandler<List<StructureNode>>(), Structure
             kind = StructureKind.OBJECT,
             modifiers = getKotlinModifiers(obj),
             signature = "",
-            line = getLineNumber(project, obj) ?: 0
+            line = getLineNumber(project, obj) ?: 0,
+            endLine = getEndLineNumber(project, obj)
         )
     }
 

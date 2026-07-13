@@ -37,13 +37,16 @@ private object ToolSettingsDefaults {
         ToolNames.RELEASE_PROJECT,
         ToolNames.SET_ALL_PROJECT_MODES,
         ToolNames.SET_PROJECT_MODE,
+        ToolNames.EDIT_MEMBER,
+        ToolNames.INSERT_MEMBER,
+        ToolNames.REPLACE_MEMBER,
     )
 
     // Add only newly introduced default-disabled tools here; old entries are snapshots
     // so legacy states keep explicit enables for older tools.
     val DEFAULT_DISABLED_TOOL_MIGRATIONS: List<Pair<Int, Set<String>>> = listOf(
         1 to setOf(ToolNames.IMPORT_MODULES),
-        2 to setOf(ToolNames.OPEN_WORKSPACE)
+        2 to setOf(ToolNames.OPEN_WORKSPACE, ToolNames.EDIT_MEMBER, ToolNames.INSERT_MEMBER, ToolNames.REPLACE_MEMBER),
     )
 }
 

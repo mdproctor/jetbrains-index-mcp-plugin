@@ -34,10 +34,13 @@ import com.github.hechtcarmel.jetbrainsindexmcpplugin.tools.project.OpenWorkspac
 import com.github.hechtcarmel.jetbrainsindexmcpplugin.tools.project.RestartIdeTool
 import com.github.hechtcarmel.jetbrainsindexmcpplugin.tools.project.SetPowerSaveModeTool
 import com.github.hechtcarmel.jetbrainsindexmcpplugin.tools.project.SyncFilesTool
+import com.github.hechtcarmel.jetbrainsindexmcpplugin.tools.refactoring.EditMemberTool
+import com.github.hechtcarmel.jetbrainsindexmcpplugin.tools.refactoring.InsertMemberTool
 import com.github.hechtcarmel.jetbrainsindexmcpplugin.tools.refactoring.MoveFileTool
 import com.github.hechtcarmel.jetbrainsindexmcpplugin.tools.refactoring.OptimizeImportsTool
 import com.github.hechtcarmel.jetbrainsindexmcpplugin.tools.refactoring.ReformatCodeTool
 import com.github.hechtcarmel.jetbrainsindexmcpplugin.tools.refactoring.RenameSymbolTool
+import com.github.hechtcarmel.jetbrainsindexmcpplugin.tools.refactoring.ReplaceMemberTool
 import com.github.hechtcarmel.jetbrainsindexmcpplugin.util.PluginDetectors
 import com.intellij.openapi.diagnostic.logger
 import java.util.concurrent.ConcurrentHashMap
@@ -268,6 +271,11 @@ class ToolRegistry {
         register(MoveFileTool())
         register(ReformatCodeTool())
         register(OptimizeImportsTool())
+
+        // Code editing tools (universal - uses Document APIs with PSI for location)
+        register(EditMemberTool())
+        register(InsertMemberTool())
+        register(ReplaceMemberTool())
 
         // Fast search tools (universal)
         register(FindClassTool())

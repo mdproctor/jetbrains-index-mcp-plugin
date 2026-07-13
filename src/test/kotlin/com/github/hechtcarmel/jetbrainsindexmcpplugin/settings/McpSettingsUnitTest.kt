@@ -155,6 +155,18 @@ class McpSettingsUnitTest : TestCase() {
         assertTrue(settings.isToolEnabled(ToolNames.IMPORT_MODULES))
     }
 
+    fun testLoadStateFromSchema1MigratesCodeEditingToolsToDisabled() {
+        val settings = McpSettings()
+        settings.loadState(McpSettings.State(
+            disabledTools = mutableSetOf(ToolNames.IMPORT_MODULES),
+            settingsSchemaVersion = 1
+        ))
+
+        assertFalse("EDIT_MEMBER should be disabled after migration", settings.isToolEnabled(ToolNames.EDIT_MEMBER))
+        assertFalse("INSERT_MEMBER should be disabled after migration", settings.isToolEnabled(ToolNames.INSERT_MEMBER))
+        assertFalse("REPLACE_MEMBER should be disabled after migration", settings.isToolEnabled(ToolNames.REPLACE_MEMBER))
+    }
+
     fun testSetToolEnabledMarksSchemaCurrent() {
         val settings = McpSettings()
 
