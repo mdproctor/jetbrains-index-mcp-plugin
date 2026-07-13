@@ -33,7 +33,6 @@ import com.github.hechtcarmel.jetbrainsindexmcpplugin.tools.refactoring.Reformat
 import com.github.hechtcarmel.jetbrainsindexmcpplugin.tools.refactoring.RenameSymbolTool
 import com.github.hechtcarmel.jetbrainsindexmcpplugin.tools.refactoring.ReplaceMemberTool
 import com.github.hechtcarmel.jetbrainsindexmcpplugin.tools.refactoring.SafeDeleteTool
-import com.github.hechtcarmel.jetbrainsindexmcpplugin.settings.McpSettings
 import com.github.hechtcarmel.jetbrainsindexmcpplugin.tools.refactoring.ReplaceTextInFileTool
 import com.github.hechtcarmel.jetbrainsindexmcpplugin.tools.refactoring.StructuralSearchReplaceTool
 import com.github.hechtcarmel.jetbrainsindexmcpplugin.handlers.LanguageHandlerRegistry
