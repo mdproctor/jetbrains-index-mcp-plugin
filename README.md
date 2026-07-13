@@ -280,6 +280,8 @@ These tools work in all supported JetBrains IDEs.
 | `ide_edit_member` | Replace an entire member declaration (signature + body) with new content (Java, Kotlin) *(disabled by default)* |
 | `ide_insert_member` | Insert a new member at a structural position in a class or file (Java, Kotlin) *(disabled by default)* |
 | `ide_replace_member` | Replace a method body or field initializer only, preserving the signature (Java, Kotlin) *(disabled by default)* |
+| `ide_structural_search_replace` | Pattern-based code search and transformation using IntelliJ's Structural Search and Replace engine (Java, Kotlin) *(disabled by default)* |
+| `ide_change_signature` | Change method signature with automatic caller updates (Java only) *(disabled by default)* |
 
 ### Extended Tools (Language-Aware)
 

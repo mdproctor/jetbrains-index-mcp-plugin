@@ -64,6 +64,15 @@ object ParamNames {
     const val ANCHOR_LINE = "anchorLine"
     const val PARAMETER_COUNT = "parameterCount"
     const val REFORMAT = "reformat"
+    // SSR parameters
+    const val SEARCH_PATTERN = "searchPattern"
+    const val REPLACE_PATTERN = "replacePattern"
+
+    // Change signature parameters
+    const val NEW_RETURN_TYPE = "newReturnType"
+    const val NEW_VISIBILITY = "newVisibility"
+    const val NEW_PARAMETERS = "newParameters"
+    const val GENERATE_DELEGATE = "generateDelegate"
 
     // Preview parameters
     const val FULL_ELEMENT_PREVIEW = "fullElementPreview"

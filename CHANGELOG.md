@@ -12,6 +12,11 @@
 - **`ide_insert_member`** — insert a new member (method, field, inner class) at a structural position relative to an anchor member or at the start/end of a class body. Auto-reformats after insertion. Supports Java and Kotlin. *(disabled by default)*
 - **`ide_replace_member`** — replace the body of a method/function or the initializer of a field/property, preserving the member's signature. Targets by structural name. Auto-reformats after editing. Supports Java and Kotlin. *(disabled by default)*
 - **`ide_file_structure` now includes `endLine`** — each member in the structure tree now reports its end line alongside the start line, enabling precise line-range reads via `ide_read_file(startLine, endLine)`.
+- **`ide_structural_search_replace`** — Pattern-based code search and transformation using IntelliJ's Structural Search and Replace engine. Accepts a `searchPattern` with optional `replacePattern` for search-only or search-and-replace operations. Supports `filePattern` and `scope` filtering. Returns match count, replaced count, and match list. *(disabled by default)* — Java, Kotlin.
+- **`ide_change_signature`** — Change a method's signature (name, return type, visibility, parameters) with automatic caller updates using IntelliJ's Change Signature refactoring. Accepts `file` + `line` + `column` to identify the method, plus optional `newName`, `newReturnType`, `newVisibility`, and `newParameters` array. Supports `generateDelegate` to preserve binary compatibility. *(disabled by default)* — Java.
+- **`ide_replace_text_in_file`** — Find and replace text (literal or regex) in a file through IntelliJ's Document API. Changes are immediately indexed. Use for mechanical text substitutions that don't need structural refactoring. *(disabled by default)*
+- **`ide_create_file`** — Create a new source file through IntelliJ's VFS, immediately indexed and available for all IDE tools without needing `ide_sync_files`. Use instead of the Write tool for `.java`, `.kt`, `.ts`, `.tsx` files. *(disabled by default)*
+>>>>>>> feat/ssr-change-signature
 
 ## [4.27.0] - 2026-07-02
 ### Added

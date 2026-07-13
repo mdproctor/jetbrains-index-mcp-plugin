@@ -37,6 +37,11 @@ object ToolNames {
     const val EDIT_MEMBER = "ide_edit_member"
     const val INSERT_MEMBER = "ide_insert_member"
     const val REPLACE_MEMBER = "ide_replace_member"
+    // Advanced refactoring tools
+    const val CHANGE_SIGNATURE = "ide_change_signature"
+    const val CREATE_FILE = "ide_create_file"
+    const val REPLACE_TEXT_IN_FILE = "ide_replace_text_in_file"
+    const val STRUCTURAL_SEARCH_REPLACE = "ide_structural_search_replace"
 
     // Editor tools
     const val GET_ACTIVE_FILE = "ide_get_active_file"
@@ -69,8 +74,10 @@ object ToolNames {
     val ALL: List<String> = listOf(
         BUILD_PROJECT,
         CALL_HIERARCHY,
+        CHANGE_SIGNATURE,
         CLOSE_PROJECT,
         CONVERT_JAVA_TO_KOTLIN,
+        CREATE_FILE,
         DIAGNOSTICS,
         EDIT_MEMBER,
         ENROLL_ALL_PROJECTS,
@@ -103,12 +110,14 @@ object ToolNames {
         RELEASE_PROJECT,
         RELOAD_PROJECT,
         REPLACE_MEMBER,
+        REPLACE_TEXT_IN_FILE,
         RESTART_IDE,
         SEARCH_TEXT,
         SET_ALL_PROJECT_MODES,
         LIFECYCLE_LOG_FILE,
         SET_POWER_SAVE_MODE,
         SET_PROJECT_MODE,
+        STRUCTURAL_SEARCH_REPLACE,
         SYNC_FILES,
         TYPE_HIERARCHY
     )

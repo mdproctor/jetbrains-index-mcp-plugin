@@ -40,6 +40,10 @@ private object ToolSettingsDefaults {
         ToolNames.EDIT_MEMBER,
         ToolNames.INSERT_MEMBER,
         ToolNames.REPLACE_MEMBER,
+        ToolNames.CHANGE_SIGNATURE,
+        ToolNames.CREATE_FILE,
+        ToolNames.REPLACE_TEXT_IN_FILE,
+        ToolNames.STRUCTURAL_SEARCH_REPLACE,
     )
 
     // Add only newly introduced default-disabled tools here; old entries are snapshots
@@ -47,6 +51,7 @@ private object ToolSettingsDefaults {
     val DEFAULT_DISABLED_TOOL_MIGRATIONS: List<Pair<Int, Set<String>>> = listOf(
         1 to setOf(ToolNames.IMPORT_MODULES),
         2 to setOf(ToolNames.OPEN_WORKSPACE, ToolNames.EDIT_MEMBER, ToolNames.INSERT_MEMBER, ToolNames.REPLACE_MEMBER),
+        2 to setOf(ToolNames.OPEN_WORKSPACE, ToolNames.CHANGE_SIGNATURE, ToolNames.CREATE_FILE, ToolNames.REPLACE_TEXT_IN_FILE, ToolNames.STRUCTURAL_SEARCH_REPLACE),
     )
 }
 

@@ -495,11 +495,16 @@ class ToolExecutionIntegrationTest : BasePlatformTestCase() {
             ToolNames.EDIT_MEMBER,
             ToolNames.INSERT_MEMBER,
             ToolNames.REPLACE_MEMBER,
+            // Advanced refactoring tools
+            ToolNames.STRUCTURAL_SEARCH_REPLACE,
+            ToolNames.CHANGE_SIGNATURE,
+            ToolNames.CREATE_FILE,
             // Editor tools
             ToolNames.GET_ACTIVE_FILE,
             ToolNames.OPEN_FILE,
             // Plugin dev tools
             ToolNames.INSTALL_PLUGIN,
+            ToolNames.REPLACE_TEXT_IN_FILE,
             ToolNames.RESTART_IDE,
             // Project window management tools
             ToolNames.CLOSE_PROJECT,

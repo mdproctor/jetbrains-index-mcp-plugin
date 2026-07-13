@@ -35,8 +35,11 @@ These tools work in every supported JetBrains IDE:
 | `ide_edit_member` | Replace an entire member declaration (signature + body) with new content (Java, Kotlin) | Disabled |
 | `ide_insert_member` | Insert a new member at a structural position (Java, Kotlin) | Disabled |
 | `ide_replace_member` | Replace method body or field initializer, preserving signature (Java, Kotlin) | Disabled |
+| `ide_structural_search_replace` | Pattern-based code search and transformation (Java, Kotlin) | Disabled |
+| `ide_change_signature` | Change method signature with automatic caller updates (Java) | Disabled |
+| `ide_create_file` | Create a new source file with content, immediately indexed by IntelliJ | Disabled |
 
-### Extended Tools (Language-Aware)
+## Extended Tools (Language-Aware)
 
 These tools activate based on available language plugins:
 
@@ -118,6 +121,9 @@ see [Claude Code Hooks](docs/claude-code-hooks.md) for ready-to-use `PreToolUse`
   - [ide_edit_member](#ide_edit_member)
   - [ide_insert_member](#ide_insert_member)
   - [ide_replace_member](#ide_replace_member)
+  - [ide_structural_search_replace](#ide_structural_search_replace)
+  - [ide_change_signature](#ide_change_signature)
+  - [ide_create_file](#ide_create_file)
 - [Extended Tools (Language-Aware)](#extended-tools-language-aware)
   - [ide_type_hierarchy](#ide_type_hierarchy)
   - [ide_call_hierarchy](#ide_call_hierarchy)
@@ -1634,6 +1640,20 @@ Replace an entire member declaration (signature + body) with new content. The to
 - Rewriting a method signature and body together
 - Replacing a field declaration with a different type or initializer
 - Updating a member where both signature and body need to change
+### ide_structural_search_replace
+
+> **Default**: Disabled - enable in Settings > Tools > Index MCP Server
+
+Pattern-based code search and transformation using IntelliJ's Structural Search and Replace (SSR) engine. Matches code patterns structurally rather than textually — understands types, expressions, statements, and code structure.
+
+**Languages:** Java, Kotlin.
+
+When `replacePattern` is omitted, the tool performs search-only and returns matching locations. When `replacePattern` is provided, the tool replaces all matches.
+
+**Use when:**
+- Finding code patterns that text search cannot express (e.g., all calls to a deprecated method with specific argument types)
+- Applying systematic code transformations across the project
+- Migrating API usage patterns
 
 **Parameters:**
 
@@ -1648,6 +1668,12 @@ Replace an entire member declaration (signature + body) with new content. The to
 | `reformat` | boolean | No | Reformat the replaced code using project code style (default: true) |
 
 **Example Request:**
+| `searchPattern` | string | Yes | Structural search pattern using IntelliJ SSR syntax |
+| `replacePattern` | string | No | Replacement pattern. If omitted, search-only mode |
+| `filePattern` | string | No | IntelliJ file mask to filter files (e.g., `"*.java"`, `"*.kt"`) |
+| `scope` | string | No | Built-in search scope. One of `project_files` (default), `project_and_libraries`, `project_production_files`, `project_test_files` |
+
+**Example Request (search-only):**
 
 ```json
 {
@@ -1659,6 +1685,115 @@ Replace an entire member declaration (signature + body) with new content. The to
       "member": "findUser",
       "parameterCount": 1,
       "content": "public User findUser(String id) {\n    return userRepository.findById(id).orElseThrow(() -> new NotFoundException(id));\n}"
+    "name": "ide_structural_search_replace",
+    "arguments": {
+      "searchPattern": "$Instance$.$MethodCall$($Parameter$)",
+      "filePattern": "*.java"
+    }
+  }
+}
+```
+
+**Example Request (search and replace):**
+
+```json
+{
+  "method": "tools/call",
+  "params": {
+    "name": "ide_structural_search_replace",
+    "arguments": {
+      "searchPattern": "System.out.println($arg$)",
+      "replacePattern": "logger.info($arg$)",
+      "filePattern": "*.java",
+      "scope": "project_production_files"
+    }
+  }
+}
+```
+
+**Example Response:**
+
+```json
+{
+  "success": true,
+  "matchCount": 12,
+  "replacedCount": 12,
+  "matches": null,
+  "message": "Replaced 12 of 12 match(es)"
+}
+```
+
+---
+
+### ide_change_signature
+
+> **Default**: Disabled - enable in Settings > Tools > Index MCP Server
+
+Change a method's signature — name, return type, visibility, and parameters — with automatic updates to all callers using IntelliJ's Change Signature refactoring. Supports reordering, adding, removing, and renaming parameters.
+
+**Language:** Java.
+
+**Use when:**
+- Adding a new parameter to a method and providing a default value for existing callers
+- Changing parameter order, types, or names across the project
+- Changing method visibility or return type
+- Generating a delegate method to preserve binary compatibility
+
+**Parameters:**
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `file` | string | Yes | Path to the file containing the method, relative to project root |
+| `line` | integer | Yes | 1-based line number of the method |
+| `column` | integer | Yes | 1-based column number of the method name |
+| `newName` | string | No | New method name (unchanged if omitted) |
+| `newReturnType` | string | No | New return type (unchanged if omitted) |
+| `newVisibility` | string | No | New visibility: `"public"`, `"protected"`, `"private"`, or `"package-local"` (unchanged if omitted) |
+| `newParameters` | array | No | Array of parameter objects defining the new parameter list. Each object: `{ oldIndex, name, type, defaultValue }`. Use `oldIndex: -1` for new parameters. |
+| `generateDelegate` | boolean | No | Generate a delegate method with the old signature that calls the new one (default: false) |
+
+**`newParameters` object fields:**
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `oldIndex` | integer | Index in the original parameter list (0-based), or `-1` for a new parameter |
+| `name` | string | Parameter name |
+| `type` | string | Parameter type (e.g., `"String"`, `"int"`, `"List<String>"`) |
+| `defaultValue` | string | Default value expression used to update existing callers (required for new parameters) |
+
+**Example Request (add parameter):**
+
+```json
+{
+  "method": "tools/call",
+  "params": {
+    "name": "ide_change_signature",
+    "arguments": {
+      "file": "src/main/java/com/example/UserService.java",
+      "line": 15,
+      "column": 17,
+      "newParameters": [
+        { "oldIndex": 0, "name": "id", "type": "String" },
+        { "oldIndex": -1, "name": "includeDeleted", "type": "boolean", "defaultValue": "false" }
+      ]
+    }
+  }
+}
+```
+
+**Example Request (rename + change visibility):**
+
+```json
+{
+  "method": "tools/call",
+  "params": {
+    "name": "ide_change_signature",
+    "arguments": {
+      "file": "src/main/java/com/example/UserService.java",
+      "line": 15,
+      "column": 17,
+      "newName": "findUserById",
+      "newVisibility": "public"
     }
   }
 }
@@ -1673,6 +1808,13 @@ Replace an entire member declaration (signature + body) with new content. The to
   "message": "Replaced method 'findUser' entirely",
   "startLine": 15,
   "endLine": 18
+  "message": "Changed signature of 'findUser' — updated 5 caller(s)",
+  "affectedFiles": [
+    "src/main/java/com/example/UserService.java",
+    "src/main/java/com/example/UserController.java",
+    "src/test/java/com/example/UserServiceTest.java"
+  ],
+  "changesCount": 5
 }
 ```
 
@@ -1690,6 +1832,18 @@ Insert a new member (method, field, inner class, etc.) at a structural position 
 - Adding a new method to a class
 - Adding a new field or constant
 - Inserting a member at a specific position relative to an existing member
+### ide_create_file
+
+> **Default**: Disabled - enable in Settings > Tools > Index MCP Server
+
+Create a new source file with content, immediately indexed by IntelliJ. The file is created through IntelliJ's VFS, so it is instantly available for `ide_find_references`, `ide_refactor_rename`, `ide_edit_member`, and all other IDE tools without needing `ide_sync_files`.
+
+Use this instead of the Write tool for creating `.java`, `.kt`, `.ts`, `.tsx`, `.py` files. The file must not already exist.
+
+**Use when:**
+- Creating new source files that need to be immediately indexed
+- Adding new classes, interfaces, or modules to the project
+- Generating files that other IDE tools need to reference right away
 
 **Parameters:**
 
@@ -1703,6 +1857,8 @@ Insert a new member (method, field, inner class, etc.) at a structural position 
 | `anchorParameterCount` | integer | No | Number of parameters to disambiguate overloaded anchor methods |
 | `anchorLine` | integer | No | 1-based line number to disambiguate the anchor member |
 | `reformat` | boolean | No | Reformat the inserted code using project code style (default: true) |
+| `file` | string | Yes | Path to the new file relative to project root. File must not already exist. |
+| `content` | string | Yes | The file content to write |
 
 **Example Request:**
 
@@ -1717,6 +1873,10 @@ Insert a new member (method, field, inner class, etc.) at a structural position 
       "content": "public void deleteUser(String id) {\n    userRepository.deleteById(id);\n}",
       "position": "after",
       "anchor": "findUser"
+    "name": "ide_create_file",
+    "arguments": {
+      "file": "src/main/java/com/example/NewService.java",
+      "content": "package com.example;\n\npublic class NewService {\n}"
     }
   }
 }
@@ -1787,6 +1947,8 @@ Replace only the body of a method or the initializer of a field, preserving the 
   "message": "Replaced body of method 'findUser'",
   "startLine": 16,
   "endLine": 18
+  "file": "src/main/java/com/example/NewService.java",
+  "message": "Created file 'src/main/java/com/example/NewService.java' (immediately indexed)"
 }
 ```
 
